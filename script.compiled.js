@@ -8,36 +8,38 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var times = {
-	minutes: 0,
-	seconds: 0,
-	miliseconds: 0
-};
-
 var Stopwatch = function (_React$Component) {
 	_inherits(Stopwatch, _React$Component);
 
-	function Stopwatch() {
+	function Stopwatch(props) {
 		_classCallCheck(this, Stopwatch);
 
-		var _this = _possibleConstructorReturn(this, (Stopwatch.__proto__ || Object.getPrototypeOf(Stopwatch)).call(this));
+		var _this = _possibleConstructorReturn(this, (Stopwatch.__proto__ || Object.getPrototypeOf(Stopwatch)).call(this, props));
 
 		_this.running = false;
 		_this.start = _this.start.bind(_this);
+		_this.stop = _this.stop.bind(_this);
+		_this.reset = _this.reset.bind(_this);
+
+		_this.times = {
+			minutes: 0,
+			seconds: 0,
+			miliseconds: 0
+		};
 		return _this;
 	}
 
 	_createClass(Stopwatch, [{
 		key: 'calculate',
 		value: function calculate() {
-			times.miliseconds += 1;
-			if (times.miliseconds >= 100) {
-				times.seconds += 1;
-				times.miliseconds = 0;
+			this.times.miliseconds += 1;
+			if (this.times.miliseconds >= 100) {
+				this.times.seconds += 1;
+				this.times.miliseconds = 0;
 			}
-			if (times.seconds >= 60) {
-				times.minutes += 1;
-				times.seconds = 0;
+			if (this.times.seconds >= 60) {
+				this.times.minutes += 1;
+				this.times.seconds = 0;
 			}
 		}
 	}, {
@@ -57,26 +59,29 @@ var Stopwatch = function (_React$Component) {
 					return _this2.step();
 				}, 10);
 			}
-			//console.log(times);
 		}
 	}, {
 		key: 'stop',
 		value: function stop() {
 			if (!this.running) {
 				return;
-			} else {
-				this.running = false;
-				clearInterval(this.watch);
 			}
+
+			this.running = false;
+			clearInterval(this.watch);
 		}
 	}, {
 		key: 'reset',
 		value: function reset() {
-			times = {
+			this.times = {
 				minutes: 0,
 				seconds: 0,
 				miliseconds: 0
 			};
+
+			if (!this.running) {
+				this.forceUpdate();
+			}
 		}
 	}, {
 		key: 'format',
@@ -86,7 +91,7 @@ var Stopwatch = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			return React.createElement('div', { className: 'mójłocz' }, React.createElement('button', { id: 'start', onClick: this.start }, 'start'), React.createElement('button', { id: 'stop', onClick: this.stop }, 'stop'), React.createElement('button', { id: 'reset', onClick: this.reset }, 'reset'), React.createElement('h2', {}, this.format(times)));
+			return React.createElement('div', { className: 'mójłocz' }, React.createElement('button', { id: 'start', onClick: this.start }, 'start'), React.createElement('button', { id: 'stop', onClick: this.stop }, 'stop'), React.createElement('button', { id: 'reset', onClick: this.reset }, 'reset'), React.createElement('h2', {}, this.format(this.times)));
 		}
 	}]);
 

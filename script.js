@@ -1,25 +1,27 @@
-let times = {
-	minutes: 0,
-	seconds: 0,
-	miliseconds: 0
-};
-
 class Stopwatch extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.running = false;
 		this.start = this.start.bind(this);
+		this.stop = this.stop.bind(this);
+		this.reset = this.reset.bind(this);
+
+		this.times = {
+			minutes: 0,
+			seconds: 0,
+			miliseconds: 0
+		};
 	}
 
 	calculate() {
-		times.miliseconds += 1;
-		if (times.miliseconds >= 100) {
-			times.seconds += 1;
-			times.miliseconds = 0;
+		this.times.miliseconds += 1;
+		if (this.times.miliseconds >= 100) {
+			this.times.seconds += 1;
+			this.times.miliseconds = 0;
 		}
-		if (times.seconds >= 60) {
-			times.minutes += 1;
-			times.seconds = 0;
+		if (this.times.seconds >= 60) {
+			this.times.minutes += 1;
+			this.times.seconds = 0;
 		}
 	}
 	
@@ -33,24 +35,27 @@ class Stopwatch extends React.Component {
 			this.running = true;
 			this.watch = setInterval(() => this.step(), 10);
 		}
-		//console.log(times);
 	}
 
-	stop() {
+	stop() {		
 		if (!this.running) {
 			return;
-		} else {
-			this.running = false;
-			clearInterval(this.watch);
-		}
+		} 
+
+		this.running = false;
+		clearInterval(this.watch);
 	}
 
 	reset() {
-		times = {
+		this.times = {
 			minutes: 0,
 			seconds: 0,
 			miliseconds: 0
 		};
+		
+		if (!this.running) {
+			this.forceUpdate();
+		}
 	}
 
 	format(times) {
@@ -63,7 +68,7 @@ class Stopwatch extends React.Component {
 				React.createElement('button', {id: 'start', onClick: this.start}, 'start'),
 				React.createElement('button', {id: 'stop', onClick: this.stop}, 'stop'),
 				React.createElement('button', {id: 'reset', onClick: this.reset}, 'reset'),
-				React.createElement('h2', {}, this.format(times))
+				React.createElement('h2', {}, this.format(this.times))
 			)	
 		);
 	}
